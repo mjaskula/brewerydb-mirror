@@ -3,9 +3,9 @@ package org.jaskula.brewerydbmirror
 import play.api._
 import play.api.mvc._
 import play.api.libs.ws.WS
-import play.api.libs.concurrent.Execution.Implicits._
 import org.jaskula.brewerydbclient.BreweryDbClient
 import play.Configuration
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
 
 object Application extends Controller {
@@ -23,8 +23,8 @@ object Application extends Controller {
 
   def populate() = Action {
   AsyncResult {
-    breweryDbClient.beersForStyle("25").map { response =>
-      Ok(response.json)
+    breweryDbClient.beersForStyle("25").map { beers =>
+      Ok(beers)
     }
   }  
 }
