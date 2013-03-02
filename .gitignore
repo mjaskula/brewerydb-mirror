@@ -1,3 +1,9 @@
+conf/brewerydb.apikey.conf
+
+.cache
+.target
+bin
+
 logs
 project/project
 project/target
