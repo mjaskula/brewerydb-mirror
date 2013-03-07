@@ -10,6 +10,7 @@ import play.api.Play.current
 import com.mongodb.casbah.Imports._
 import play.api.libs.json.Json
 import com.mongodb.util.JSON
+import com.mongodb.casbah.commons.MongoDBObject
 
 object Application extends Controller {
   
@@ -29,8 +30,11 @@ object Application extends Controller {
   def populate() = Action {
   AsyncResult {
     breweryDbClient.beersJsonForStyle("25").map { beers =>
-      beers.map { beer =>
-        mongodb("beers") += com.mongodb.util.JSON.parse(Json.stringify(beer)).asInstanceOf[DBObject]
+      beers.map { beerJson =>
+        val beer = com.mongodb.util.JSON.parse(Json.stringify(beerJson)).asInstanceOf[DBObject]
+        mongodb("beers").update(MongoDBObject("id" -> beer("id")),
+                                beer, 
+                                upsert = true)
       }
       Ok("crap!")
     }
