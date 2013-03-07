@@ -12,7 +12,8 @@ class BreweryDbClient(apiKey: String) {
   def beersJsonForStyle(styleId: String): Future[Seq[JsObject]] = {
     WS.url("http://api.brewerydb.com/v2/beers")
       .withQueryString("key" -> apiKey,
-                       "styleId" -> styleId).get().map { response =>
+                       "styleId" -> styleId,
+                       "withBreweries" -> "Y").get().map { response =>
       (response.json \ "data").as[Seq[JsObject]]
     }
     
