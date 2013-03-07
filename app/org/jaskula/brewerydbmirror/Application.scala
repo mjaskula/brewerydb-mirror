@@ -21,7 +21,7 @@ object Application extends Controller {
   def populate() = Action {
     AsyncResult {
       dataProcessor.updateBeersForStyle("25").map { updateCount =>
-        Ok("Updated " + updateCount + " beers")
+        Ok("Updated %d beers".format(updateCount))
       }
     }
   }
