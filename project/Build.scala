@@ -15,6 +15,7 @@ object ApplicationBuild extends Build {
     "org.mongodb" %% "casbah" % "2.5.0",
     "com.novus" %% "salat-core" % "1.9.2-SNAPSHOT",
     "se.radley" %% "play-plugins-salat" % "1.2",
+    "joda-time" % "joda-time" % "2.1",
     
     "org.testng" % "testng" % "6.8" % "test",
     "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"

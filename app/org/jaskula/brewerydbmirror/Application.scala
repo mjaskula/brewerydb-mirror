@@ -20,8 +20,8 @@ object Application extends Controller {
 
   def populate() = Action {
     AsyncResult {
-      dataProcessor.updateBeersForStyle("25").map { updateCount =>
-        Ok("Updated %d beers".format(updateCount))
+      dataProcessor.updateBeersForStyle("25").map { stats =>
+        Ok("Updated: %s".format(stats.toString))
       }
     }
   }
