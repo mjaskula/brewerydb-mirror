@@ -48,11 +48,15 @@ class DataProcessor(config: Configuration) { //TODO: better name?
   
   def saveBreweryFromBeerData(beer: DBObject): Int = {
     val breweryList = beer.getAsOrElse[MongoDBList]("breweries", MongoDBList.empty)
-    beer.removeField("breweries")
-    breweryList.headOption.asInstanceOf[Option[DBObject]] match { 
-      case Some(brewery) => upsertById("breweries", processFields(brewery))
-      case None          => 0
+    var count = 0
+    beer.removeField("breweries") //TODO: brewery ids
+    val breweryIdList = MongoDBList.newBuilder
+    breweryList.map { brewery =>
+      breweryIdList += brewery.asInstanceOf[DBObject].get("id")
+      count += upsertById("breweries", processFields(brewery.asInstanceOf[DBObject]))
     }
+    beer.put("breweryIds", breweryIdList.result)
+    count
   }
 
   def processFields(o: DBObject): DBObject = {
