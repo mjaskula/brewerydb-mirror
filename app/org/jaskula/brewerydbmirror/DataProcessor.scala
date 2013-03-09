@@ -23,6 +23,16 @@ class DataProcessor(config: Configuration) { //TODO: better name?
   
   val formatter = DateTimeFormat.forPattern("yyyy-MM-dd kk:mm:ss"); 
   
+  def updateStyles(): Future[Int] = { // TODO: should style categories be their own collection? 
+    breweryDbClient.stylesJson().map { styles =>
+      var count = 0
+      styles.map { styleJson =>
+        count += upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
+      }
+      count
+    }
+  }
+  
   def updateBeersForStyle(styleId: String): Future[UpdateStats] = {
     breweryDbClient.beersJsonForStyle(styleId).map { beers =>
       var stats = newStats()

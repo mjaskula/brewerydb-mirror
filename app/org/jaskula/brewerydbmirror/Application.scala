@@ -18,6 +18,14 @@ object Application extends Controller {
 	Ok("beers")
   }
 
+  def updateStyles() = Action {
+    AsyncResult {
+      dataProcessor.updateStyles().map { count =>
+        Ok("Updated %d styles".format(count))
+      }
+    }
+  }
+  
   def populate() = Action {
     AsyncResult {
       dataProcessor.updateBeersForStyle("25").map { stats =>

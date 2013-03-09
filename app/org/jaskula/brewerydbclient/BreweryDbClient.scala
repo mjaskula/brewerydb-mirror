@@ -9,16 +9,19 @@ import scala.concurrent.Future
 
 class BreweryDbClient(apiKey: String) {
 
-  def beersJsonForStyle(styleId: String): Future[Seq[JsObject]] = {
-    WS.url("http://api.brewerydb.com/v2/beers")
-      .withQueryString("key" -> apiKey,
-                       "styleId" -> styleId,
-                       "withBreweries" -> "Y").get().map { response =>
-      (response.json \ "data").as[Seq[JsObject]]
+  val apiUrlRoot = "http://api.brewerydb.com/v2/"
+  
+  def stylesJson(): Future[Seq[JsObject]] = breweryDbCall("styles")
+
+  def beersJsonForStyle(styleId: String): Future[Seq[JsObject]] =
+    breweryDbCall("beers", "styleId" -> styleId, "withBreweries" -> "Y")
+  
+  // TODO: add error handling
+  private def breweryDbCall(endpoint: String, parameters: (String, String)*): Future[Seq[JsObject]] = {
+    WS.url(apiUrlRoot + endpoint).withQueryString("key" -> apiKey)
+                                 .withQueryString(parameters: _*).get().map { response =>
+        (response.json \ "data").as[Seq[JsObject]]
     }
-    
   }
-  
-  
 }
 
