@@ -12,7 +12,14 @@ import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
 import com.mongodb.casbah.commons.conversions.scala._
 import org.jaskula.brewerydbclient.MongoStatsStorageProvider
-
+import play.api.libs.concurrent.Akka
+import play.api.Play.current
+import akka.actor.Props
+import akka.routing.SmallestMailboxRouter
+import scala.concurrent.duration._
+import akka.util.Timeout
+import akka.pattern.ask
+import scala.concurrent.Promise
 
 class DataProcessor(config: Configuration) { //TODO: better name?
 
@@ -25,15 +32,27 @@ class DataProcessor(config: Configuration) { //TODO: better name?
   val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   
   val formatter = DateTimeFormat.forPattern("yyyy-MM-dd kk:mm:ss"); 
+
+  val writerRouter = Akka.system.actorOf(Props[MongoWriterActor].
+          withRouter(SmallestMailboxRouter(5)), "writerRouter")
+
+  val readerRouter = Akka.system.actorOf(Props(new BreweryDbReaderActor(writerRouter)).
+      withRouter(SmallestMailboxRouter(5)), "readerRouter")
+
+  implicit val timeout = Timeout(5 seconds)
   
   def updateStyles(): Future[Int] = { // TODO: should style categories be their own collection? 
-    breweryDbClient.stylesJson().map { styles =>
-      var count = 0
-      styles.map { styleJson =>
-        count += upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
-      }
-      count
-    }
+    (readerRouter ? "Styles").asInstanceOf[Promise[Int]].future
+    
+//    breweryDbClient.stylesJson().map { styles =>
+//      var count = 0
+//      styles.map { styleJson =>
+//        count += upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
+//      }
+//      count
+//    }
+    
+//    scala.concurrent.future {0}
   }
   
   def updateBeersForStyle(styleId: String): Future[UpdateStats] = {
