@@ -11,13 +11,16 @@ import com.mongodb.WriteResult
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
 import com.mongodb.casbah.commons.conversions.scala._
+import org.jaskula.brewerydbclient.MongoStatsStorageProvider
 
 
 class DataProcessor(config: Configuration) { //TODO: better name?
 
   RegisterJodaTimeConversionHelpers()
+
+  val stats = new MongoStatsStorageProvider(config)
   
-  val breweryDbClient = new BreweryDbClient(config.getString("brewerydb.apikey").getOrElse("specify apikey in 'conf/brewerydb.apikey.conf'"))
+  val breweryDbClient = new BreweryDbClient(config.getString("brewerydb.apikey").getOrElse("specify apikey in 'conf/brewerydb.apikey.conf'"), stats)
   
   val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   

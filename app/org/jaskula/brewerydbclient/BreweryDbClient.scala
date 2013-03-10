@@ -7,7 +7,7 @@ import play.api.libs.json.JsArray
 import play.api.libs.json.JsObject
 import scala.concurrent.Future
 
-class BreweryDbClient(apiKey: String) {
+class BreweryDbClient(apiKey: String, stats: StatsStorageProvider) {
 
   val apiUrlRoot = "http://api.brewerydb.com/v2/"
   
@@ -20,6 +20,7 @@ class BreweryDbClient(apiKey: String) {
   private def breweryDbCall(endpoint: String, parameters: (String, String)*): Future[Seq[JsObject]] = {
     WS.url(apiUrlRoot + endpoint).withQueryString("key" -> apiKey)
                                  .withQueryString(parameters: _*).get().map { response =>
+        stats.countApiCall()
         (response.json \ "data").as[Seq[JsObject]]
     }
   }
