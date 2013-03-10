@@ -5,10 +5,10 @@ import play.api.mvc._
 import play.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
+import com.google.inject._
 
-object Application extends Controller {
-  
-  val dataProcessor = new DataProcessor(play.api.Play.configuration)
+@Singleton
+class Application @Inject()(dataProcessor: DataProcessor) extends Controller {
   
   def index = Action {
     Ok("index")

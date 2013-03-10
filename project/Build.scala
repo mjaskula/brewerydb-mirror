@@ -12,6 +12,9 @@ object ApplicationBuild extends Build {
     jdbc,
     anorm,
     
+    "com.google.inject" % "guice" % "3.0",
+    "com.tzavellas" % "sse-guice" % "0.7.1",
+    
     "org.mongodb" %% "casbah" % "2.5.0",
     "com.novus" %% "salat-core" % "1.9.2-SNAPSHOT",
     "se.radley" %% "play-plugins-salat" % "1.2",

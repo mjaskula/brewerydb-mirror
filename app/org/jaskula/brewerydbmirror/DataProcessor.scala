@@ -20,8 +20,10 @@ import scala.concurrent.duration._
 import akka.util.Timeout
 import akka.pattern.ask
 import scala.concurrent.Promise
+import com.google.inject._
 
-class DataProcessor(config: Configuration) { //TODO: better name?
+@Singleton
+class DataProcessor @Inject()(config: Configuration) { //TODO: better name?
 
   RegisterJodaTimeConversionHelpers()
 
