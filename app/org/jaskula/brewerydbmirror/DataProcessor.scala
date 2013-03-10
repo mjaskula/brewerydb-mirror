@@ -22,15 +22,12 @@ import akka.pattern.ask
 import scala.concurrent.Promise
 import com.google.inject._
 
-@Singleton
-class DataProcessor @Inject()(config: Configuration) { //TODO: better name?
+@Singleton  //TODO: better name?
+class DataProcessor @Inject()(config: Configuration,
+                              breweryDbClient: BreweryDbClient) {
 
   RegisterJodaTimeConversionHelpers()
 
-  val stats = new MongoStatsStorageProvider(config)
-  
-  val breweryDbClient = new BreweryDbClient(config.getString("brewerydb.apikey").getOrElse("specify apikey in 'conf/brewerydb.apikey.conf'"), stats)
-  
   val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   
   val formatter = DateTimeFormat.forPattern("yyyy-MM-dd kk:mm:ss"); 

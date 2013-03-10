@@ -6,9 +6,13 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.JsArray
 import play.api.libs.json.JsObject
 import scala.concurrent.Future
+import com.google.inject._
+import play.api.Configuration
 
-class BreweryDbClient(apiKey: String, stats: StatsStorageProvider) {
+@Singleton
+class BreweryDbClient @Inject()(config: Configuration, stats: StatsStorageProvider) {
 
+  val apiKey = config.getString("brewerydb.apikey").getOrElse("specify apikey in 'conf/brewerydb.apikey.conf'")
   val apiUrlRoot = "http://api.brewerydb.com/v2/"
   
   def stylesJson(): Future[Seq[JsObject]] = breweryDbCall("styles")

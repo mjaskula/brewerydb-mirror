@@ -5,12 +5,14 @@ import com.mongodb.casbah.query.Imports._
 import org.joda.time.LocalDate
 import org.joda.time.DateTimeZone
 import com.mongodb.casbah.MongoClient
+import com.google.inject._
 
 trait StatsStorageProvider {
   def countApiCall(): Unit
 }
 
-class MongoStatsStorageProvider(config: Configuration) extends StatsStorageProvider {
+@Singleton
+class MongoStatsStorageProvider @Inject()(config: Configuration) extends StatsStorageProvider {
   
   val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   
