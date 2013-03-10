@@ -21,6 +21,7 @@ class BreweryDbClient(apiKey: String, stats: StatsStorageProvider) {
     WS.url(apiUrlRoot + endpoint).withQueryString("key" -> apiKey)
                                  .withQueryString(parameters: _*).get().map { response =>
         stats.countApiCall()
+        play.Logger.info("Gathering %s data %s".format(endpoint, parameters))
         (response.json \ "data").as[Seq[JsObject]]
     }
   }

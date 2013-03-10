@@ -70,6 +70,7 @@ class DataProcessor(config: Configuration) { //TODO: better name?
   }
   
   def upsertById(collName: String, data: DBObject): Int = {
+    play.Logger.info("Saving to %s: %s".format(collName, data("name")))
     mongodb(collName).update(MongoDBObject("id" -> data("id")), data, upsert = true).getN()
   }
     
