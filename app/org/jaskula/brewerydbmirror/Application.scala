@@ -19,11 +19,8 @@ class Application @Inject()(dataProcessor: DataProcessor) extends Controller {
   }
 
   def updateStyles() = Action {
-    AsyncResult {
-      dataProcessor.updateStyles().map { count =>
-        Ok("Updated %d styles".format(count))
-      }
-    }
+    dataProcessor.updateStyles()
+    Ok("Update styles started")
   }
   
   def populate() = Action {

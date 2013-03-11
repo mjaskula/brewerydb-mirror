@@ -24,7 +24,8 @@ import com.google.inject._
 
 @Singleton  //TODO: better name?
 class DataProcessor @Inject()(config: Configuration,
-                              breweryDbClient: BreweryDbClient) {
+                              breweryDbClient: BreweryDbClient,
+                              actorPool: ActorPool) {
 
   RegisterJodaTimeConversionHelpers()
 
@@ -32,16 +33,10 @@ class DataProcessor @Inject()(config: Configuration,
   
   val formatter = DateTimeFormat.forPattern("yyyy-MM-dd kk:mm:ss"); 
 
-  val writerRouter = Akka.system.actorOf(Props[MongoWriterActor].
-          withRouter(SmallestMailboxRouter(5)), "writerRouter")
-
-  val readerRouter = Akka.system.actorOf(Props(new BreweryDbReaderActor(writerRouter)).
-      withRouter(SmallestMailboxRouter(5)), "readerRouter")
-
   implicit val timeout = Timeout(5 seconds)
   
-  def updateStyles(): Future[Int] = { // TODO: should style categories be their own collection? 
-    (readerRouter ? "Styles").asInstanceOf[Promise[Int]].future
+  def updateStyles() = {  
+    actorPool.reader ! "styles"
     
 //    breweryDbClient.stylesJson().map { styles =>
 //      var count = 0
