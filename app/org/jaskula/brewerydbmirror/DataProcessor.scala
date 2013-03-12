@@ -37,16 +37,6 @@ class DataProcessor @Inject()(config: Configuration,
   
   def updateStyles() = {  
     actorPool.reader ! "styles"
-    
-//    breweryDbClient.stylesJson().map { styles =>
-//      var count = 0
-//      styles.map { styleJson =>
-//        count += upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
-//      }
-//      count
-//    }
-    
-//    scala.concurrent.future {0}
   }
   
   def updateBeersForStyle(styleId: String): Future[UpdateStats] = {

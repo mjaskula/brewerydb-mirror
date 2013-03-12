@@ -14,15 +14,18 @@ class MongoWriterActor(config: Configuration) extends Actor {
   val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   
   def receive = {
-    case ("style", styleJson: JsValue) =>
-      play.Logger.info("Received message 'style' in writer actor %s".format(self.path.name))
-      // TODO: should style categories be their own collection?
-      upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
-    case msg =>
-      play.Logger.info("Received unsupported message '%s' in writer actor %s".format(msg, self.path.name))
+    case ("style", styleJson: JsValue) =>  saveStyle(styleJson)
+    case unsupportedMsg =>
+      play.Logger.info("Received unsupported message '%s' in writer actor %s".format(unsupportedMsg, self.path.name))
   }
   
-  def upsertById(collName: String, data: DBObject): Int = {
+  private def saveStyle(styleJson: play.api.libs.json.JsValue) = {
+    play.Logger.info("Received message 'style' in writer actor %s".format(self.path.name))
+    // TODO: should style categories be their own collection?
+    upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
+  }
+  
+  private def upsertById(collName: String, data: DBObject): Int = {
     play.Logger.info("Saving to %s: %s".format(collName, data("name")))
     mongodb(collName).update(MongoDBObject("id" -> data("id")), data, upsert = true).getN()
   }
