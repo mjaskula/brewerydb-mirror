@@ -7,14 +7,14 @@ import play.api.Configuration
 import play.api.libs.json.Json
 import com.mongodb.casbah.Imports._
 import play.api.libs.json.JsValue
+import org.jaskula.brewerydbmirror.MessageType._
 
-//TODO: extract interface?
 class MongoWriterActor(config: Configuration) extends Actor {
-
+  
   val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   
   def receive = {
-    case ("style", styleJson: JsValue) =>  saveStyle(styleJson)
+    case (WriteStyle, styleJson: JsValue) =>  saveStyle(styleJson)
     case unsupportedMsg =>
       play.Logger.info("Received unsupported message '%s' in writer actor %s".format(unsupportedMsg, self.path.name))
   }

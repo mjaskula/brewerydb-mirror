@@ -21,3 +21,10 @@ class ActorPool @Inject()(config: Configuration,
           
   def reader = readerRouter 
 }
+
+object MessageType extends Enumeration {
+  type MessageType = Value
+  val ReadStyles,
+      WriteStyle
+      = Value
+}

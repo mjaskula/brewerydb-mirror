@@ -21,6 +21,7 @@ import akka.util.Timeout
 import akka.pattern.ask
 import scala.concurrent.Promise
 import com.google.inject._
+import org.jaskula.brewerydbmirror.MessageType._
 
 @Singleton  //TODO: better name?
 class DataProcessor @Inject()(config: Configuration,
@@ -36,7 +37,7 @@ class DataProcessor @Inject()(config: Configuration,
   implicit val timeout = Timeout(5 seconds)
   
   def updateStyles() = {  
-    actorPool.reader ! "styles"
+    actorPool.reader ! ReadStyles
   }
   
   def updateBeersForStyle(styleId: String): Future[UpdateStats] = {
