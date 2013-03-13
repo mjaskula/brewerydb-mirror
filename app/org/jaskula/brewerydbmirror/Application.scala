@@ -8,7 +8,7 @@ import play.api.Play.current
 import com.google.inject._
 
 @Singleton
-class Application @Inject()(dataProcessor: DataProcessor) extends Controller {
+class Application @Inject()(mirror: Mirror) extends Controller {
   
   def index = Action {
     Ok("index")
@@ -19,18 +19,18 @@ class Application @Inject()(dataProcessor: DataProcessor) extends Controller {
   }
 
   def loadAll() = Action {
-    dataProcessor.loadAllStyles()
-    dataProcessor.loadAllBeers()
+    mirror.loadAllStyles()
+    mirror.loadAllBeers()
     Ok("Load all started")
   }
   
   def loadAllStyles() = Action {
-    dataProcessor.loadAllStyles()
+    mirror.loadAllStyles()
     Ok("Load all styles started")
   }
   
   def loadAllBeers() = Action {
-    dataProcessor.loadAllBeers()
+    mirror.loadAllBeers()
     Ok("Load all beers started")
   }
   
