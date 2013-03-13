@@ -35,7 +35,7 @@ class StatsStorageProvider @Inject()(mongo: MongoService) {
   }
   
   def getRecentCommands(count: Int = 5): Iterator[(String, String)] = {
-    for (log <- mongo.commandLog.find().limit(count).sort(MongoDBObject(fieldDate -> 1))) yield {
+    for (log <- mongo.commandLog.find().limit(count).sort(MongoDBObject(fieldDate -> -1))) yield {
       (log.getAsOrElse[String](fieldDate, "unknown Date"), log.getAsOrElse[String](fieldCommand, "Unknown Command"))
     } 
   }
