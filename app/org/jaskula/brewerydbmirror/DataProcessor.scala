@@ -1,20 +1,16 @@
 package org.jaskula.brewerydbmirror
 
-import play.api.Configuration
-import org.jaskula.brewerydbclient.BreweryDbClient
 import com.google.inject._
 import org.jaskula.brewerydbmirror.MessageType._
 
 @Singleton  //TODO: better name?
-class DataProcessor @Inject()(config: Configuration,
-                              breweryDbClient: BreweryDbClient,
-                              actorPool: ActorPool) {
+class DataProcessor @Inject()(actorPool: ActorPool) {
 
-  def updateStyles() = {  
+  def loadAllStyles() = {  
     actorPool.reader ! ReadStyles
   }
   
-  def updateBeers() = {
+  def loadAllBeers() = {
     actorPool.reader ! ReadBeers
   }
 }

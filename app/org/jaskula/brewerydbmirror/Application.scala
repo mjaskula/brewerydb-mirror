@@ -18,14 +18,20 @@ class Application @Inject()(dataProcessor: DataProcessor) extends Controller {
 	Ok("beers")
   }
 
-  def updateStyles() = Action {
-    dataProcessor.updateStyles()
-    Ok("Update styles started")
+  def loadAll() = Action {
+    dataProcessor.loadAllStyles()
+    dataProcessor.loadAllBeers()
+    Ok("Load all started")
   }
   
-  def populate() = Action {
-    dataProcessor.updateBeers()
-    Ok("Update beers started")
+  def loadAllStyles() = Action {
+    dataProcessor.loadAllStyles()
+    Ok("Load all styles started")
+  }
+  
+  def loadAllBeers() = Action {
+    dataProcessor.loadAllBeers()
+    Ok("Load all beers started")
   }
   
 }
