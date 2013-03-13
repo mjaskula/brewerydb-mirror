@@ -8,7 +8,6 @@ import akka.routing.SmallestMailboxRouter
 import com.google.inject.Inject
 import org.jaskula.brewerydbclient.BreweryDbClient
 import play.api.Configuration
-import org.jaskula.brewerydbmirror.MongoService
 
 @Singleton
 class ActorPool @Inject()(breweryDbClient: BreweryDbClient,

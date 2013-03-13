@@ -15,7 +15,9 @@ class MirrorStatus @Inject()(mongo: MongoService,
       new Status(mongo.styles.size,
                  mongo.breweries.size,
                  mongo.beers.size,
-                 stats.getTodaysApiCallCount)
+                 stats.getRecentCommands(),
+                 stats.getTodaysApiCallCount
+                 )
     }
   }
   
@@ -25,12 +27,14 @@ class MirrorStatus @Inject()(mongo: MongoService,
   case class Status(styles: Int,
                     breweries: Int,
                     beers: Int,
+                    commands: Iterator[(String, String)],
                     apiCalls: Int) {
     
     override def toString() = {
       "Styles: " + styles +
       "\nBreweries: " + breweries +
       "\nBeers: " + beers +
+      "\n\nRecentCommands:" + commands.foldLeft("")(_+"\n"+_) +
       "\n\nAPI Calls Today: " + apiCalls 
     }
   }

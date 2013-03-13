@@ -19,4 +19,5 @@ class MongoService @Inject() (config: Configuration) {
 
   // meta-data collections
   val apiCalls:MongoCollection = db("apiCalls")
+  val commandLog:MongoCollection = db("commandLog")
 }

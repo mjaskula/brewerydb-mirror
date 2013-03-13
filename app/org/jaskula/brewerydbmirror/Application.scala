@@ -24,8 +24,7 @@ class Application @Inject()(mirror: Mirror,
   }
 
   def loadAll() = Action {
-    mirror.loadAllStyles()
-    mirror.loadAllBeers()
+    mirror.loadAll()
     Ok("Load all started")
   }
   
