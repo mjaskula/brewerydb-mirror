@@ -8,12 +8,13 @@ import akka.routing.SmallestMailboxRouter
 import com.google.inject.Inject
 import org.jaskula.brewerydbclient.BreweryDbClient
 import play.api.Configuration
+import org.jaskula.brewerydbmirror.MongoService
 
 @Singleton
-class ActorPool @Inject()(config: Configuration,
-                          breweryDbClient: BreweryDbClient) {
+class ActorPool @Inject()(breweryDbClient: BreweryDbClient,
+                          mongoService: MongoService) {
 
-  val writerRouter = Akka.system.actorOf(Props(new MongoWriterActor(config)).
+  val writerRouter = Akka.system.actorOf(Props(new MongoWriterActor(mongoService)).
           withRouter(SmallestMailboxRouter(5)), "writerRouter")
 
   val readerRouter = Akka.system.actorOf(Props(new BreweryDbReaderActor(breweryDbClient, writerRouter)).

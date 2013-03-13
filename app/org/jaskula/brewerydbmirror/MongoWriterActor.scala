@@ -10,12 +10,12 @@ import play.api.libs.json.JsValue
 import org.jaskula.brewerydbmirror.MessageType._
 import org.joda.time.format.DateTimeFormat
 import com.mongodb.casbah.commons.conversions.scala._
+import org.jaskula.brewerydbmirror.MongoService
 
-class MongoWriterActor(config: Configuration) extends Actor {
+class MongoWriterActor(mongo: MongoService) extends Actor {
   
   RegisterJodaTimeConversionHelpers()
   
-  val mongodb =  MongoClient()(config.getString("mongodb.default.db").getOrElse("test"))
   val formatter = DateTimeFormat.forPattern("yyyy-MM-dd kk:mm:ss");
   
   def receive = {
@@ -28,7 +28,7 @@ class MongoWriterActor(config: Configuration) extends Actor {
   private def saveStyle(styleJson: JsValue) = {
     logMessage(WriteStyle)
     // TODO: should style categories be their own collection?
-    upsertById("styles", com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
+    upsertById(mongo.styles, com.mongodb.util.JSON.parse(Json.stringify(styleJson)).asInstanceOf[DBObject])
   }
   
   private def saveBeer(beerJson: JsValue) = {
@@ -36,7 +36,7 @@ class MongoWriterActor(config: Configuration) extends Actor {
     val beer = com.mongodb.util.JSON.parse(Json.stringify(beerJson)).asInstanceOf[DBObject]
     beer.removeField("style")
     saveBreweryFromBeerData(beer)
-    upsertById("beers", processFields(beer))
+    upsertById(mongo.beers, processFields(beer))
   }
   
   def saveBreweryFromBeerData(beer: DBObject): Int = {
@@ -46,7 +46,7 @@ class MongoWriterActor(config: Configuration) extends Actor {
     val breweryIdList = MongoDBList.newBuilder
     breweryList.map { brewery =>
       breweryIdList += brewery.asInstanceOf[DBObject].get("id")
-      count += upsertById("breweries", processFields(brewery.asInstanceOf[DBObject]))
+      count += upsertById(mongo.breweries, processFields(brewery.asInstanceOf[DBObject]))
     }
     beer.put("breweryIds", breweryIdList.result)
     count
@@ -62,8 +62,8 @@ class MongoWriterActor(config: Configuration) extends Actor {
   private def logMessage(msgType: MessageType) =
     play.Logger.info("Received message '%s' in writer actor %s".format(msgType, self.path.name))
   
-  private def upsertById(collName: String, data: DBObject): Int = {
-    play.Logger.info("Saving to %s: %s".format(collName, data("name")))
-    mongodb(collName).update(MongoDBObject("id" -> data("id")), data, upsert = true).getN()
+  private def upsertById(coll: MongoCollection, data: DBObject): Int = {
+    play.Logger.info("Saving to %s: %s".format(coll.name, data("name")))
+    coll.update(MongoDBObject("id" -> data("id")), data, upsert = true).getN()
   }
 }

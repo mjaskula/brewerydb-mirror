@@ -8,14 +8,19 @@ import play.api.Play.current
 import com.google.inject._
 
 @Singleton
-class Application @Inject()(mirror: Mirror) extends Controller {
+class Application @Inject()(mirror: Mirror,
+                            mirrorStatus: MirrorStatus) extends Controller {
   
-  def index = Action {
-    Ok("index")
+  def status = Action {
+    AsyncResult {
+      mirrorStatus.status.map { status => 
+        Ok(status.toString)
+      }
+    }
   }
   
   def beers = Action {
-	Ok("beers")
+    Ok("beers")
   }
 
   def loadAll() = Action {

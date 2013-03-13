@@ -3,7 +3,8 @@
 # ~~~~
 
 # Home page
-GET     /                       @org.jaskula.brewerydbmirror.Application.index
+GET     /                       @org.jaskula.brewerydbmirror.Application.status
+GET     /status                 @org.jaskula.brewerydbmirror.Application.status
 GET     /beers                  @org.jaskula.brewerydbmirror.Application.beers
 
 GET     /loadAllStyles          @org.jaskula.brewerydbmirror.Application.loadAllStyles
