@@ -25,17 +25,17 @@ class Application @Inject()(mirror: Mirror,
 
   def loadAll() = Action {
     mirror.loadAll()
-    Ok("Load all started")
+    Redirect(routes.Application.status)
   }
   
   def loadAllStyles() = Action {
     mirror.loadAllStyles()
-    Ok("Load all styles started")
+    Redirect(routes.Application.status)
   }
   
   def loadAllBeers() = Action {
     mirror.loadAllBeers()
-    Ok("Load all beers started")
+    Redirect(routes.Application.status)
   }
   
 }
