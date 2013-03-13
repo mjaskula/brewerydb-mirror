@@ -33,8 +33,8 @@ class Application @Inject()(mirror: Mirror,
     Redirect(routes.Application.status)
   }
   
-  def loadAllBeers() = Action {
-    mirror.loadAllBeers()
+  def loadBeersForStyle(styleId: String) = Action {
+    mirror.loadBeersForStyle(styleId)
     Redirect(routes.Application.status)
   }
   

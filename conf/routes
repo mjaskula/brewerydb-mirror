@@ -3,13 +3,13 @@
 # ~~~~
 
 # Home page
-GET     /                       @org.jaskula.brewerydbmirror.Application.status
-GET     /status                 @org.jaskula.brewerydbmirror.Application.status
-GET     /beers                  @org.jaskula.brewerydbmirror.Application.beers
+GET   /                       @org.jaskula.brewerydbmirror.Application.status
+GET   /status                 @org.jaskula.brewerydbmirror.Application.status
+GET   /beers                  @org.jaskula.brewerydbmirror.Application.beers
 
-GET     /loadAllStyles          @org.jaskula.brewerydbmirror.Application.loadAllStyles
-GET     /loadAllBeers           @org.jaskula.brewerydbmirror.Application.loadAllBeers
-GET     /loadAll                @org.jaskula.brewerydbmirror.Application.loadAll
+GET   /loadAllStyles                @org.jaskula.brewerydbmirror.Application.loadAllStyles
+GET   /loadBeersForStyle/:styleId   @org.jaskula.brewerydbmirror.Application.loadBeersForStyle(styleId: String)
+GET   /loadAll                      @org.jaskula.brewerydbmirror.Application.loadAll
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.at(path="/public", file)

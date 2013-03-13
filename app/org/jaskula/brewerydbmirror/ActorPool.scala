@@ -24,7 +24,7 @@ class ActorPool @Inject()(breweryDbClient: BreweryDbClient,
 
 object MessageType extends Enumeration {
   type MessageType = Value
-  val ReadStyles, ReadBeers,
+  val ReadAll, ReadStyles, ReadBeersForStyle,
       WriteStyle, WriteBeer
       = Value
 }

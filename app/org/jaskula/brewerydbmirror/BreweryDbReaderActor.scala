@@ -10,7 +10,7 @@ class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) e
   
   def receive = {
     case ReadStyles => readAllStyles
-    case ReadBeers =>  readAllBeers
+    case (ReadBeersForStyle, styleId: String) =>  readBeersForStyle(styleId)
     case unsupportedMsg =>
       play.Logger.info("Received unsupported message '%s' in reader actor %s".format(unsupportedMsg, self.path.name))
   }
@@ -25,10 +25,6 @@ class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) e
     }
   }
   
-  private def readAllBeers = {
-    logMessage(ReadBeers)
-    readBeersForStyle("26")
-  }
   
   private def readBeersForStyle(styleId: String) = {
     breweryDbClient.beersJsonForStyle(styleId).map { beers =>

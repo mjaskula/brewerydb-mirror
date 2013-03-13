@@ -10,8 +10,7 @@ class Mirror @Inject()(actorPool: ActorPool,
 
   def loadAll() = { //TODO: should read styles, then beers
     stats.logCommand("loadAll")
-    actorPool.reader ! ReadStyles
-    actorPool.reader ! ReadBeers
+    actorPool.reader ! ReadAll
   }
 
   def loadAllStyles() = {
@@ -19,8 +18,8 @@ class Mirror @Inject()(actorPool: ActorPool,
     actorPool.reader ! ReadStyles
   }
   
-  def loadAllBeers() = {
-    stats.logCommand("loadAllBeers")
-    actorPool.reader ! ReadBeers
+  def loadBeersForStyle(styleId: String) = {
+    stats.logCommand("loadBeersForStyle: " + styleId)
+    actorPool.reader ! (ReadBeersForStyle, styleId)
   }
 }
