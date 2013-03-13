@@ -24,11 +24,8 @@ class Application @Inject()(dataProcessor: DataProcessor) extends Controller {
   }
   
   def populate() = Action {
-    AsyncResult {
-      dataProcessor.updateBeersForStyle("25").map { stats =>
-        Ok("Updated: %s".format(stats.toString))
-      }
-    }
+    dataProcessor.updateBeers()
+    Ok("Update beers started")
   }
   
 }

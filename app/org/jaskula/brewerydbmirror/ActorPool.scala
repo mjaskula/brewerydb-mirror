@@ -24,7 +24,7 @@ class ActorPool @Inject()(config: Configuration,
 
 object MessageType extends Enumeration {
   type MessageType = Value
-  val ReadStyles,
-      WriteStyle
+  val ReadStyles, ReadBeers,
+      WriteStyle, WriteBeer
       = Value
 }

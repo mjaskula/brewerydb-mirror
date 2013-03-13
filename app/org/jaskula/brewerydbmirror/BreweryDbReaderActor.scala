@@ -9,13 +9,14 @@ import org.jaskula.brewerydbmirror.MessageType._
 class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) extends Actor {
   
   def receive = {
-    case ReadStyles =>  readAllStyles
+    case ReadStyles => readAllStyles
+    case ReadBeers =>  readAllBeers
     case unsupportedMsg =>
       play.Logger.info("Received unsupported message '%s' in reader actor %s".format(unsupportedMsg, self.path.name))
   }
   
   private def readAllStyles = {
-    play.Logger.info("Received message 'styles' in reader actor %s".format(self.path.name))
+    logMessage(ReadStyles)
     
     breweryDbClient.stylesJson().map { styles =>
       styles.map { styleJson =>
@@ -23,4 +24,20 @@ class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) e
       }
     }
   }
+  
+  private def readAllBeers = {
+    logMessage(ReadBeers)
+    readBeersForStyle("26")
+  }
+  
+  private def readBeersForStyle(styleId: String) = {
+    breweryDbClient.beersJsonForStyle(styleId).map { beers =>
+      beers.map { beerJson =>
+        writer ! (WriteBeer, beerJson)
+      }
+    }
+  }
+  
+  private def logMessage(msgType: MessageType) =
+    play.Logger.info("Received message '%s' in reader actor %s".format(msgType, self.path.name))
 }
