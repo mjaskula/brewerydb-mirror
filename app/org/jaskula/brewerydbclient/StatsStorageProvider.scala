@@ -9,24 +9,19 @@ import com.google.inject._
 import org.joda.time.DateTime
 import org.jaskula.brewerydbmirror.MongoService
 
-trait StatsStorageProvider {
-  def countApiCall(): Unit
-  def getTodaysApiCallCount(): Int
-}
-
 @Singleton
-class MongoStatsStorageProvider @Inject()(mongo: MongoService) extends StatsStorageProvider {
+class StatsStorageProvider @Inject()(mongo: MongoService) {
   
   val count = "count"
   val date = "date"
   
-  override def countApiCall(): Unit = {
+  def countApiCall(): Unit = {
     mongo.apiCalls.update(MongoDBObject(date -> today), 
                           $inc(count -> 1), 
                           upsert = true)
   }
   
-  override def getTodaysApiCallCount(): Int = {
+  def getTodaysApiCallCount(): Int = {
     mongo.apiCalls.findOne(MongoDBObject(date -> today)) match {
       case Some(result) => result.getAsOrElse[Int](count, 0)
       case None => 0
