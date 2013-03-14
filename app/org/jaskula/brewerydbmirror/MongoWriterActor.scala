@@ -10,13 +10,12 @@ import play.api.libs.json.JsValue
 import org.jaskula.brewerydbmirror.MessageType._
 import org.joda.time.format.DateTimeFormat
 import com.mongodb.casbah.commons.conversions.scala._
-import org.jaskula.brewerydbmirror.MongoService
 
 class MongoWriterActor(mongo: MongoService) extends Actor {
   
   RegisterJodaTimeConversionHelpers()
   
-  val formatter = DateTimeFormat.forPattern("yyyy-MM-dd kk:mm:ss");
+  val formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
   
   def receive = {
     case (WriteStyle,     styleJson: JsValue) => saveStyle(styleJson)
