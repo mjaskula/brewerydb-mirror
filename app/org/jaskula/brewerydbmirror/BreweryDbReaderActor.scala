@@ -9,18 +9,31 @@ import org.jaskula.brewerydbmirror.MessageType._
 class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) extends Actor {
   
   def receive = {
+    case ReadAll => readAll
     case ReadStyles => readAllStyles
     case (ReadBeersForStyle, styleId: String) =>  readBeersForStyle(styleId)
     case unsupportedMsg =>
       play.Logger.info("Received unsupported message '%s' in reader actor %s".format(unsupportedMsg, self.path.name))
   }
   
-  private def readAllStyles = {
+  private def readAll(): Unit = {
+    logMessage(ReadAll)
+    readAllStyles(withBeers = true)
+  }
+  
+  private def readAllStyles(): Unit = {
     logMessage(ReadStyles)
+    readAllStyles(withBeers = false)
+  }
+  
+  private def readAllStyles(withBeers: Boolean): Unit = {
     
     breweryDbClient.stylesJson().map { styles =>
       styles.map { styleJson =>
         writer ! (WriteStyle, styleJson)
+        if (withBeers) {
+          context.parent ! (ReadBeersForStyle, (styleJson \ "id").toString)
+        }
       }
     }
   }
