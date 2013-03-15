@@ -41,7 +41,7 @@ class MongoWriterActor(mongo: MongoService) extends Actor {
   def saveBreweryFromBeerData(beer: DBObject): Int = {
     val breweryList = beer.getAsOrElse[MongoDBList]("breweries", MongoDBList.empty)
     var count = 0
-    beer.removeField("breweries") //TODO: brewery ids
+    beer.removeField("breweries")
     val breweryIdList = MongoDBList.newBuilder
     breweryList.map { brewery =>
       breweryIdList += brewery.asInstanceOf[DBObject].get("id")

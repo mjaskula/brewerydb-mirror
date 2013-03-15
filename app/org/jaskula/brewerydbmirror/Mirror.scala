@@ -8,7 +8,7 @@ import org.jaskula.brewerydbclient.StatsStorageProvider
 class Mirror @Inject()(actorPool: ActorPool,
                        stats: StatsStorageProvider) {
 
-  def loadAll() = { //TODO: should read styles, then beers
+  def loadAll() = {
     stats.logCommand("loadAll")
     actorPool.reader ! ReadAll
   }

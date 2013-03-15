@@ -21,6 +21,7 @@ class BreweryDbClient @Inject()(config: Configuration, stats: StatsStorageProvid
     breweryDbCall("beers", "styleId" -> styleId, "withBreweries" -> "Y")
   
   // TODO: add error handling
+  // TODO: add page support
   private def breweryDbCall(endpoint: String, parameters: (String, String)*): Future[Seq[JsObject]] = {
     WS.url(apiUrlRoot + endpoint).withQueryString("key" -> apiKey)
                                  .withQueryString(parameters: _*).get().map { response =>
