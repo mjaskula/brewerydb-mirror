@@ -27,9 +27,8 @@ class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) e
   }
   
   private def readAllStyles(withBeers: Boolean): Unit = {
-    
-    breweryDbClient.stylesJson().map { styles =>
-      styles.map { styleJson =>
+    breweryDbClient.stylesJson().map { stylesResponse =>
+      stylesResponse.data.map { styleJson =>
         writer ! (WriteStyle, styleJson)
         if (withBeers) {
           context.parent ! (ReadBeersForStyle, (styleJson \ "id").toString)
@@ -40,8 +39,8 @@ class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) e
   
   
   private def readBeersForStyle(styleId: String) = {
-    breweryDbClient.beersJsonForStyle(styleId).map { beers =>
-      beers.map { beerJson =>
+    breweryDbClient.beersJsonForStyle(styleId).map { beersResponse =>
+      beersResponse.data.map { beerJson =>
         writer ! (WriteBeer, beerJson)
       }
     }
