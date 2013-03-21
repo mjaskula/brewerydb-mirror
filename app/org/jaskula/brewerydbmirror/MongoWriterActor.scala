@@ -59,7 +59,7 @@ class MongoWriterActor(mongo: MongoService) extends Actor {
   }
   
   private def logMessage(msgType: MessageType) =
-    play.Logger.info("Received message '%s' in writer actor %s".format(msgType, self.path.name))
+    play.Logger.trace("Received message '%s' in writer actor %s".format(msgType, self.path.name))
   
   private def upsertById(coll: MongoCollection, data: DBObject): Int = {
     play.Logger.info("Saving to %s: %s".format(coll.name, data("name")))

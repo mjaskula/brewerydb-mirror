@@ -47,5 +47,5 @@ class BreweryDbReaderActor(breweryDbClient: BreweryDbClient, writer: ActorRef) e
   }
   
   private def logMessage(msgType: MessageType) =
-    play.Logger.info("Received message '%s' in reader actor %s".format(msgType, self.path.name))
+    play.Logger.trace("Received message '%s' in reader actor %s".format(msgType, self.path.name))
 }
