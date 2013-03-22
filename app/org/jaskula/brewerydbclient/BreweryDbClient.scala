@@ -27,31 +27,40 @@ class BreweryDbClient @Inject()(config: Configuration, stats: StatsStorageProvid
         
   )(BreweryResponse)
     
-  def stylesJson(): Future[BreweryResponse] = breweryDbCall("styles", 0)
+  def stylesJson(): Future[BreweryResponse] = breweryDbCall("styles", 1)
 
-  def beersJsonForStyle(styleId: String, page: Int = 0): Future[BreweryResponse] =
+  def beersJsonForStyle(styleId: String, page: Int = 1): Future[BreweryResponse] =
     breweryDbCall("beers", page, "styleId" -> styleId, "withBreweries" -> "Y")
   
   // TODO: add error handling
   private def breweryDbCall(endpoint: String, page: Int, parameters: (String, String)*): Future[BreweryResponse] = {
+    play.Logger.info("Gathering page %d of %s".format(page, endpoint))
     WS.url(apiUrlRoot + endpoint).withQueryString("key" -> apiKey)
                                  .withQueryString("p" -> page.toString)
                                  .withQueryString(parameters: _*).get().map { response =>
         stats.countApiCall()
-        play.Logger.info("Gathering page %d of %s".format(page, endpoint))
+        play.Logger.trace("Response json: " + response.json)
         responseReads.reads(response.json).fold(
-          valid = { response => response },
-          invalid = { e => throw BreweryDbException(e.toString) }
+          valid = { bDbResponse => bDbResponse },
+          invalid = { e =>
+            play.Logger.error(e.toString + ":\n" + response.json)
+            throw BreweryDbException(e.toString) 
+          }
         )
     }
   }
-  
+} 
   case class BreweryResponse(data: Seq[JsObject],
                              currentPage: Option[Int],
                              numberOfPages: Option[Int],
                              totalResults: Option[Int]) {
     
+    def remainingPages(): Seq[Int] = {
+      (currentPage, numberOfPages) match {
+          case (Some(current), Some(count)) => List.range(current + 1, count + 1)
+          case _ => List.empty
+      }
+    } 
   }
   
   case class BreweryDbException(message: String = null, cause: Throwable = null) extends Exception
-}
