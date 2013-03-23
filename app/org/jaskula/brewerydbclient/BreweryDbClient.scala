@@ -20,7 +20,7 @@ class BreweryDbClient @Inject()(config: Configuration, stats: StatsStorageProvid
   val apiUrlRoot = "http://api.brewerydb.com/v2/"
   
   val responseReads: Reads[BreweryResponse] = (
-        (JsPath \ "data").read[Seq[JsObject]] and
+        (JsPath \ "data").readNullable[Seq[JsObject]] and
         (JsPath \ "currentPage").readNullable[Int] and
         (JsPath \ "numberOfPages").readNullable[Int] and
         (JsPath \ "totalResults").readNullable[Int]
@@ -45,12 +45,13 @@ class BreweryDbClient @Inject()(config: Configuration, stats: StatsStorageProvid
           invalid = { e =>
             play.Logger.error(e.toString + ":\n" + response.json)
             throw BreweryDbException(e.toString) 
+            // TODO: retry
           }
         )
     }
   }
 } 
-  case class BreweryResponse(data: Seq[JsObject],
+  case class BreweryResponse(data: Option[Seq[JsObject]],
                              currentPage: Option[Int],
                              numberOfPages: Option[Int],
                              totalResults: Option[Int]) {
