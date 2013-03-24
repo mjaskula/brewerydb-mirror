@@ -6,12 +6,12 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json.JsArray
 import play.api.libs.json.JsObject
 import scala.concurrent.Future
-import com.google.inject._
 import play.api.Configuration
 import play.api.libs.json.JsObject
 import play.api.libs.json.JsString
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import javax.inject._
 
 @Singleton
 class BreweryDbClient @Inject()(config: Configuration, stats: StatsStorageProvider) {

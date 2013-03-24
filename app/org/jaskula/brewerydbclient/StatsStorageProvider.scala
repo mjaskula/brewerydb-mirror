@@ -5,7 +5,7 @@ import com.mongodb.casbah.query.Imports._
 import org.joda.time.LocalDate
 import org.joda.time.DateTimeZone
 import com.mongodb.casbah.MongoClient
-import com.google.inject._
+import javax.inject._
 import org.joda.time.DateTime
 import org.jaskula.brewerydbmirror.MongoService
 import com.mongodb.casbah.commons.MongoDBObject

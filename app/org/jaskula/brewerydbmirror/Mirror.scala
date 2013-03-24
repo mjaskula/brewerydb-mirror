@@ -1,6 +1,6 @@
 package org.jaskula.brewerydbmirror
 
-import com.google.inject._
+import javax.inject._
 import org.jaskula.brewerydbmirror.MessageType._
 import org.jaskula.brewerydbclient.StatsStorageProvider
 

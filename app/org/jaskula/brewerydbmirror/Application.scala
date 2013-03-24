@@ -5,7 +5,7 @@ import play.api.mvc._
 import play.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
-import com.google.inject._
+import javax.inject._
 
 @Singleton
 class Application @Inject()(mirror: Mirror,

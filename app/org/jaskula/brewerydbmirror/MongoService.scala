@@ -1,9 +1,9 @@
 package org.jaskula.brewerydbmirror
 
-import com.google.inject.Inject
+import javax.inject.Inject
 import play.api.Configuration
 import com.mongodb.casbah.MongoClient
-import com.google.inject.Singleton
+import javax.inject.Singleton
 import com.mongodb.casbah.MongoDB
 import com.mongodb.casbah.MongoCollection
 

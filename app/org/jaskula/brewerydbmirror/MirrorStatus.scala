@@ -2,8 +2,8 @@ package org.jaskula.brewerydbmirror
 
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits._
-import com.google.inject.Inject
-import com.google.inject.Singleton
+import javax.inject.Inject
+import javax.inject.Singleton
 import org.jaskula.brewerydbclient.StatsStorageProvider
 
 @Singleton

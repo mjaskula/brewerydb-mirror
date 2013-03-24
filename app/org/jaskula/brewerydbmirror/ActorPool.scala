@@ -1,11 +1,11 @@
 package org.jaskula.brewerydbmirror
 
-import com.google.inject.Singleton
+import javax.inject.Singleton
 import play.api.libs.concurrent.Akka
 import play.api.Play.current
 import akka.actor.Props
 import akka.routing.SmallestMailboxRouter
-import com.google.inject.Inject
+import javax.inject.Inject
 import org.jaskula.brewerydbclient.BreweryDbClient
 import play.api.Configuration
 
