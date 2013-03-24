@@ -16,6 +16,7 @@ object ApplicationBuild extends Build {
     "com.tzavellas" % "sse-guice" % "0.7.1",
     
     "org.mongodb" %% "casbah" % "2.5.0",
+    "org.reactivemongo" %% "play2-reactivemongo" % "0.8",
     "joda-time" % "joda-time" % "2.1",
     
     "org.testng" % "testng" % "6.8" % "test",

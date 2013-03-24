@@ -1,5 +1,6 @@
 TODO:
 
+- indexes?
 - replace google inject annotations with javax.inject
 - use ReactiveMongo for writes: https://github.com/zenexity/Play-ReactiveMongo
 - replace maps with for comprehensions where it makes more sense
