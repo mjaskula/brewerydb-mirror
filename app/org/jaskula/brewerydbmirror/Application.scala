@@ -6,10 +6,14 @@ import play.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
 import javax.inject._
+import play.api.libs.json.Json
 
 @Singleton
 class Application @Inject()(mirror: Mirror,
-                            mirrorStatus: MirrorStatus) extends Controller {
+                            mirrorStatus: MirrorStatus,
+                            generator: JsonGenerator) extends Controller {
+  
+  //  Display
   
   def status = Action {
     AsyncResult {
@@ -23,6 +27,8 @@ class Application @Inject()(mirror: Mirror,
     Ok("beers")
   }
 
+  // Mirroring
+  
   def loadAll() = Action {
     mirror.loadAll()
     Redirect(routes.Application.status)
@@ -38,4 +44,15 @@ class Application @Inject()(mirror: Mirror,
     Redirect(routes.Application.status)
   }
   
+  
+  // Generate
+  
+  def generate() = Action {
+    AsyncResult {
+      generator.generateBeers.map { beers =>
+        Ok(beers)
+      }
+    }
+    
+  }
 }

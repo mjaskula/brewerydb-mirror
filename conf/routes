@@ -2,16 +2,19 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
+# Display
 GET   /                       @org.jaskula.brewerydbmirror.Application.status
 GET   /status                 @org.jaskula.brewerydbmirror.Application.status
 GET    /beers/:id              org.jaskula.brewerydbmirror.ReactiveTest.findByName(id: Int)
 GET   /beers                  @org.jaskula.brewerydbmirror.Application.beers
 
+# Mirroring
 GET   /loadAllStyles                @org.jaskula.brewerydbmirror.Application.loadAllStyles
 GET   /loadBeersForStyle/:styleId   @org.jaskula.brewerydbmirror.Application.loadBeersForStyle(styleId: String)
 GET   /loadAll                      @org.jaskula.brewerydbmirror.Application.loadAll
 
+# Generators
+GET  /generate                @org.jaskula.brewerydbmirror.Application.generate
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file           controllers.Assets.at(path="/public", file)
