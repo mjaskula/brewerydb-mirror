@@ -11,6 +11,7 @@ import org.jaskula.brewerydbmirror.MessageType._
 import org.joda.time.format.DateTimeFormat
 import com.mongodb.casbah.commons.conversions.scala._
 
+// TODO: can we use json reads to make this class simpler?
 class MongoWriterActor(mongo: MongoService) extends Actor {
   
   RegisterJodaTimeConversionHelpers()
@@ -38,19 +39,26 @@ class MongoWriterActor(mongo: MongoService) extends Actor {
     upsertById(mongo.beers, processFields(beer))
   }
   
-  def saveBreweryFromBeerData(beer: DBObject): Int = {
+  def saveBreweryFromBeerData(beer: DBObject): Unit = {
     val breweryList = beer.getAsOrElse[MongoDBList]("breweries", MongoDBList.empty)
-    var count = 0
+    // TODO: save breweryName field using primary brewery
+    beer.put("breweryName", getbreweryName(breweryList));
     beer.removeField("breweries")
     val breweryIdList = MongoDBList.newBuilder
     breweryList.map { brewery =>
       breweryIdList += brewery.asInstanceOf[DBObject].get("id")
-      count += upsertById(mongo.breweries, processFields(brewery.asInstanceOf[DBObject]))
+      upsertById(mongo.breweries, processFields(brewery.asInstanceOf[DBObject]))
     }
     beer.put("breweryIds", breweryIdList.result)
-    count
   }
 
+  def getbreweryName(breweries: MongoDBList): String = {
+    breweries.headOption match {
+      case Some(brewery) => brewery.asInstanceOf[DBObject].getAsOrElse[String]("name", "unknown brewery")
+      case None => "unknown brewery"
+    }
+  }
+  
   def processFields(o: DBObject): DBObject = {
     o.getAs[String]("createDate").map { dateString => 
       o.put("createDate", formatter.parseDateTime(dateString))
